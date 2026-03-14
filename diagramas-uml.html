@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagramas UML — Cronómetro de Competencia</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #fff;
+            color: #1e293b;
+            padding: 40px 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cover {
+            text-align: center;
+            padding: 80px 0;
+            page-break-after: always;
+        }
+
+        .cover h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .cover .sub {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .cover .info {
+            font-size: 1rem;
+            color: #475569;
+            line-height: 2;
+        }
+
+        .cover .url {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 12px 24px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #0ea5e9;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .diagram-section {
+            page-break-before: always;
+            margin-bottom: 3rem;
+        }
+
+        .diagram-section h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 3px solid #0ea5e9;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .diagram-section .description {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media print {
+            body { padding: 20px 40px; }
+            .diagram-section { page-break-before: always; }
+            .cover { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== PORTADA ==================== -->
+<div class="cover">
+    <h1>Diagramas UML</h1>
+    <p class="sub">Cronómetro de Competencia</p>
+    <div class="info">
+        <p><strong>Asignatura:</strong> Sistemas</p>
+        <p><strong>Tarea:</strong> Tarea 2</p>
+        <p><strong>Fecha:</strong> Marzo 2026</p>
+    </div>
+    <br>
+    <p class="info"><strong>URL de la aplicación:</strong></p>
+    <a class="url" href="#">https://&lt;tu-usuario&gt;.github.io/cronometro-competencia/</a>
+    <p style="margin-top:1rem; color:#94a3b8; font-size:0.85rem;">
+        (Reemplazar con la URL real una vez publicado en GitHub Pages)
+    </p>
+</div>
+
+<!-- ==================== 1. CASOS DE USO ==================== -->
+<div class="diagram-section">
+    <h2>1. Diagrama de Casos de Uso</h2>
+    <p class="description">
+        Muestra las interacciones entre el <strong>Usuario (Juez/Cronometrador)</strong> y el sistema.
+        Los casos de uso principales incluyen controlar el cronómetro, registrar competidores,
+        y consultar las diferencias de tiempo.
+    </p>
+    <pre class="mermaid">
+    graph LR
+        User(("👤 Usuario<br/>(Juez)"))
+
+        subgraph Sistema ["Sistema Cronómetro de Competencia"]
+            UC1["Iniciar Cronómetro"]
+            UC2["Pausar Cronómetro"]
+            UC3["Reiniciar Cronómetro"]
+            UC4["Capturar Tiempo<br/>de Competidor"]
+            UC5["Ver Tabla<br/>de Resultados"]
+            UC6["Eliminar<br/>Competidor"]
+            UC7["Limpiar Todos<br/>los Resultados"]
+            UC8["Calcular Diferencia<br/>vs Primero"]
+            UC9["Calcular Diferencia<br/>vs Anterior"]
+            UC10["Ordenar por<br/>Tiempo"]
+        end
+
+        User --- UC1
+        User --- UC2
+        User --- UC3
+        User --- UC4
+        User --- UC5
+        User --- UC6
+        User --- UC7
+
+        UC4 -.->|"«include»"| UC8
+        UC4 -.->|"«include»"| UC9
+        UC4 -.->|"«include»"| UC10
+        UC5 -.->|"«include»"| UC8
+        UC5 -.->|"«include»"| UC9
+    </pre>
+</div>
+
+<!-- ==================== 2. CLASES ==================== -->
+<div class="diagram-section">
+    <h2>2. Diagrama de Clases</h2>
+    <p class="description">
+        Representa la estructura estática del sistema con sus tres clases principales:
+        <strong>Stopwatch</strong> (gestión del tiempo), <strong>Competitor</strong> (modelo de datos de cada competidor)
+        y <strong>Competition</strong> (gestión de la lista de competidores), orquestadas por la clase <strong>App</strong>.
+    </p>
+    <pre class="mermaid">
+    classDiagram
+        class Stopwatch {
+            -HTMLElement displayElement
+            -number startTime
+            -number elapsedTime
+            -number timerInterval
+            -boolean running
+            +start() void
+            +pause() void
+            +reset() void
+            +update() void
+            +getCurrentTime() number
+            +formatTime(ms: number)$ string
+        }
+
+        class Competitor {
+            +number id
+            +string name
+            +number timeMs
+            +getFormattedTime() string
+        }
+
+        class Competition {
+            -Competitor[] competitors
+            +addCompetitor(c: Competitor) void
+            +removeCompetitor(id: number) void
+            +sortByTime() void
+            +getFirstTime() number
+            +getDiffWithFirst(c: Competitor) number
+            +getDiffWithPrevious(index: number) number
+            +clear() void
+            +getCount() number
+        }
+
+        class App {
+            -Stopwatch stopwatch
+            -Competition competition
+            -HTMLElement timerDisplay
+            -HTMLElement resultsBody
+            +bindEvents() void
+            +handleStart() void
+            +handlePause() void
+            +handleReset() void
+            +handleCapture() void
+            +handleClearAll() void
+            +renderResults() void
+            +escapeHtml(text: string) string
+        }
+
+        App "1" --> "1" Stopwatch : usa
+        App "1" --> "1" Competition : usa
+        Competition "1" --> "*" Competitor : contiene
+        App ..> Competitor : crea
+    </pre>
+</div>
+
+<!-- ==================== 3. SECUENCIA ==================== -->
+<div class="diagram-section">
+    <h2>3. Diagrama de Secuencia</h2>
+    <p class="description">
+        Ilustra el flujo temporal de mensajes cuando el usuario inicia el cronómetro,
+        captura el tiempo de un competidor y visualiza los resultados ordenados con diferencias.
+    </p>
+    <pre class="mermaid">
+    sequenceDiagram
+        actor U as Usuario
+        participant A as App
+        participant S as Stopwatch
+        participant Co as Competition
+        participant C as Competitor
+
+        U->>A: Click "Iniciar"
+        A->>S: start()
+        S->>S: setInterval(update, 10ms)
+        S-->>A: Cronómetro corriendo
+
+        Note over U,C: El tiempo transcurre...
+
+        U->>A: Escribe nombre + Click "Capturar"
+        A->>S: getCurrentTime()
+        S-->>A: tiempoMs
+        A->>C: new Competitor(nombre, tiempoMs)
+        C-->>A: competidor
+        A->>Co: addCompetitor(competidor)
+        Co->>Co: sortByTime()
+        A->>A: renderResults()
+
+        loop Para cada competidor
+            A->>Co: getDiffWithFirst(comp)
+            Co-->>A: diferencia vs 1°
+            A->>Co: getDiffWithPrevious(index)
+            Co-->>A: diferencia vs anterior
+        end
+
+        A-->>U: Tabla de resultados actualizada
+
+        U->>A: Click "Eliminar" competidor
+        A->>Co: removeCompetitor(id)
+        A->>A: renderResults()
+        A-->>U: Tabla actualizada
+    </pre>
+</div>
+
+<!-- ==================== 4. OBJETOS ==================== -->
+<div class="diagram-section">
+    <h2>4. Diagrama de Objetos</h2>
+    <p class="description">
+        Muestra una instantánea del sistema en ejecución con objetos concretos:
+        una instancia de App, un Stopwatch activo, una Competition con tres competidores registrados
+        y sus tiempos específicos.
+    </p>
+    <pre class="mermaid">
+    classDiagram
+        class app_App {
+            «instancia de App»
+        }
+
+        class sw_Stopwatch {
+            «instancia de Stopwatch»
+            running = true
+            startTime = 1710000000000
+            elapsedTime = 125340
+        }
+
+        class comp_Competition {
+            «instancia de Competition»
+            competitors: 3 elementos
+        }
+
+        class c1_Competitor {
+            «instancia de Competitor»
+            id = 1
+            name = "Carlos"
+            timeMs = 45230
+        }
+
+        class c2_Competitor {
+            «instancia de Competitor»
+            id = 2
+            name = "María"
+            timeMs = 52810
+        }
+
+        class c3_Competitor {
+            «instancia de Competitor»
+            id = 3
+            name = "Luis"
+            timeMs = 61450
+        }
+
+        app_App --> sw_Stopwatch : stopwatch
+        app_App --> comp_Competition : competition
+        comp_Competition --> c1_Competitor : competitors[0]
+        comp_Competition --> c2_Competitor : competitors[1]
+        comp_Competition --> c3_Competitor : competitors[2]
+    </pre>
+</div>
+
+<!-- ==================== 5. COMPONENTES ==================== -->
+<div class="diagram-section">
+    <h2>5. Diagrama de Componentes</h2>
+    <p class="description">
+        Describe la arquitectura del sistema a nivel de componentes: la interfaz de usuario (HTML/CSS),
+        la lógica del cronómetro, la gestión de competidores y la capa de presentación de resultados,
+        junto con sus dependencias externas (navegador, fuentes).
+    </p>
+    <pre class="mermaid">
+    graph TB
+        subgraph Navegador ["🌐 Navegador Web"]
+            subgraph UI ["Capa de Presentación"]
+                HTML["📄 index.html<br/>(Estructura)"]
+                CSS["🎨 styles.css<br/>(Estilos)"]
+            end
+
+            subgraph Logic ["Capa Lógica (app.js)"]
+                AppC["🎛️ App<br/>(Controlador)"]
+                SWC["⏱️ Stopwatch<br/>(Cronómetro)"]
+                CompetC["🏆 Competition<br/>(Gestión)"]
+                CompC["👤 Competitor<br/>(Modelo)"]
+            end
+
+            DOM["📦 DOM API"]
+        end
+
+        subgraph External ["Recursos Externos"]
+            Fonts["Google Fonts<br/>(Inter, JetBrains Mono)"]
+        end
+
+        HTML --> CSS
+        HTML --> AppC
+        CSS --> Fonts
+        AppC --> SWC
+        AppC --> CompetC
+        CompetC --> CompC
+        AppC --> DOM
+        SWC --> DOM
+    </pre>
+</div>
+
+<!-- ==================== 6. ACTIVIDAD ==================== -->
+<div class="diagram-section">
+    <h2>6. Diagrama de Actividad</h2>
+    <p class="description">
+        Representa el flujo de trabajo completo del usuario al utilizar la aplicación:
+        desde iniciar el cronómetro, capturar tiempos de múltiples competidores,
+        hasta visualizar las comparaciones finales.
+    </p>
+    <pre class="mermaid">
+    graph TD
+        A([🟢 Inicio]) --> B["Abrir aplicación"]
+        B --> C["Click 'Iniciar' cronómetro"]
+        C --> D["Cronómetro corriendo"]
+        D --> E{"¿Acción del usuario?"}
+
+        E -->|"Capturar tiempo"| F["Escribir nombre<br/>del competidor"]
+        E -->|"Pausar"| G["Pausar cronómetro"]
+        E -->|"Reiniciar"| H["Reiniciar a 00:00:00"]
+
+        F --> I{"¿Nombre válido?"}
+        I -->|"No"| J["Mostrar error<br/>en campo"] --> F
+        I -->|"Sí"| K["Obtener tiempo actual<br/>del cronómetro"]
+        K --> L["Crear nuevo<br/>Competitor"]
+        L --> M["Agregar a Competition"]
+        M --> N["Ordenar competidores<br/>por tiempo"]
+        N --> O["Calcular diferencias<br/>vs 1° y vs anterior"]
+        O --> P["Renderizar tabla<br/>de resultados"]
+        P --> D
+
+        G --> Q{"¿Acción?"}
+        Q -->|"Reanudar"| D
+        Q -->|"Reiniciar"| H
+
+        H --> R{"¿Registrar más<br/>competidores?"}
+        R -->|"Sí"| C
+        R -->|"No"| S["Ver resultados finales"]
+
+        S --> T{"¿Limpiar resultados?"}
+        T -->|"Sí"| U["Eliminar todos<br/>los registros"] --> C
+        T -->|"No"| V([🔴 Fin])
+    </pre>
+</div>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+            fontFamily: 'Inter, system-ui, sans-serif',
+            fontSize: '14px'
+        },
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+        sequence: { useMaxWidth: true, mirrorActors: false },
+        class: { useMaxWidth: true }
+    });
+</script>
+
+</body>
+</html>

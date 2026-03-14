@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronómetro de Competencia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>Cronómetro de Competencia</h1>
+            <p class="subtitle">Captura y compara tiempos entre competidores</p>
+        </header>
+
+        <section class="stopwatch-section">
+            <div class="timer-display" id="timerDisplay">00:00:00.000</div>
+            <div class="stopwatch-controls">
+                <button id="btnStart" class="btn btn-start">Iniciar</button>
+                <button id="btnPause" class="btn btn-pause" disabled>Pausar</button>
+                <button id="btnReset" class="btn btn-reset" disabled>Reiniciar</button>
+            </div>
+        </section>
+
+        <section class="capture-section">
+            <div class="capture-form">
+                <input type="text" id="competitorName" placeholder="Nombre del competidor" class="input-name" />
+                <button id="btnCapture" class="btn btn-capture" disabled>Capturar Tiempo</button>
+            </div>
+        </section>
+
+        <section class="results-section" id="resultsSection" style="display:none;">
+            <h2>Resultados</h2>
+            <div class="results-controls">
+                <button id="btnClearAll" class="btn btn-clear">Limpiar Resultados</button>
+            </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Pos.</th>
+                        <th>Competidor</th>
+                        <th>Tiempo</th>
+                        <th>Diferencia vs 1°</th>
+                        <th>Diferencia vs Anterior</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </section>
+
+        <footer class="footer">
+            <p>Tarea 2 — Sistemas — Universidad</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
